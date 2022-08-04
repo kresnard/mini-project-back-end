@@ -7,15 +7,20 @@ import (
 
 type EmployeeService interface {
 	GetAllEmployee() ([]domain.Employees, *errs.AppErr)
+	GetEmployeeID(int) (domain.Employees, *errs.AppErr)
 }
 
 type DefaultEmployeeService struct {
 	repo domain.EmployeeRepository
 }
 
-func (s DefaultEmployeeService) GetAllEmployee() ([]domain.Employees, *errs.AppErr) {
+func NewEmployeeService(repository domain.EmployeeRepository) DefaultEmployeeService {
+	return DefaultEmployeeService{repository}
+}
 
-	employees, err := s.repo.FindAll()
+func (e DefaultEmployeeService) GetAllEmployee() ([]domain.Employees, *errs.AppErr) {
+
+	employees, err := e.repo.FindAll()
 	if err != nil {
 		return nil, err
 	}
@@ -23,6 +28,10 @@ func (s DefaultEmployeeService) GetAllEmployee() ([]domain.Employees, *errs.AppE
 	return employees, nil
 }
 
-func NewEmployeeService(repository domain.EmployeeRepository) DefaultEmployeeService {
-	return DefaultEmployeeService{repository}
+func (e DefaultEmployeeService) GetEmployeeID(id int) (domain.Employees, *errs.AppErr) {
+	employees, err := e.repo.FindByID(id)
+	if err != nil {
+		return employees, err
+	}
+	return employees, nil
 }

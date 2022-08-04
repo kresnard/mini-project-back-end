@@ -13,4 +13,5 @@ type Employees struct {
 
 type EmployeeRepository interface {
 	FindAll() ([]Employees, *errs.AppErr)
+	FindByID(int) (Employees, *errs.AppErr)
 }
