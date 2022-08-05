@@ -57,7 +57,8 @@ func Start() {
 	router := gin.Default()
 
 	router.GET("/employees", ch.getAllEmployee)
-	router.GET("/employees/:id", ch.GetEmployeeID)
+	router.GET("/employees/:id", ch.getEmployeeID)
+	router.POST("/employees", ch.createEmployee)
 
 	router.Run(":9090")
 

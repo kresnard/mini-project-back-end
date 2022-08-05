@@ -37,3 +37,14 @@ func (e EmployeeRepositoryDB) FindByID(id int) (Employees, *errs.AppErr) {
 	}
 	return employees, nil
 }
+
+func (e EmployeeRepositoryDB) CreateEmployeeInput(employees Employees) (Employees, *errs.AppErr) {
+
+	query := e.db.Create(&employees).Error
+
+	if query != nil {
+		logger.Error("error to create employee data")
+		return employees, errs.NewUnexpectedError("unexpected error")
+	}
+	return employees, nil
+}

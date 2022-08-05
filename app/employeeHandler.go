@@ -1,6 +1,7 @@
 package app
 
 import (
+	"mpbe/input"
 	"mpbe/service"
 	"net/http"
 	"strconv"
@@ -27,7 +28,7 @@ func (ch *EmployeeHandlers) getAllEmployee(c *gin.Context) {
 
 }
 
-func (ch *EmployeeHandlers) GetEmployeeID(c *gin.Context) {
+func (ch *EmployeeHandlers) getEmployeeID(c *gin.Context) {
 
 	id := c.Param("id")
 	newId, _ := strconv.Atoi(id)
@@ -37,5 +38,16 @@ func (ch *EmployeeHandlers) GetEmployeeID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, nil)
 	}
 
+	c.JSON(http.StatusOK, employees)
+}
+
+func (ch *EmployeeHandlers) createEmployee(c *gin.Context) {
+	var input input.EmployeeInput
+	err := c.ShouldBindJSON(&input)
+	employees, _ := ch.service.CreateEmployee(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
 	c.JSON(http.StatusOK, employees)
 }
