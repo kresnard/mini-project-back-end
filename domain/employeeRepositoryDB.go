@@ -48,3 +48,15 @@ func (e EmployeeRepositoryDB) CreateEmployeeInput(employees Employees) (Employee
 	}
 	return employees, nil
 }
+
+func (e EmployeeRepositoryDB) DeleteEmployee(id int) (Employees, *errs.AppErr) {
+
+	var employees Employees
+	query := e.db.Delete(&employees, "employee_id = ?", id)
+	if query != nil {
+		logger.Error("error to delete employee data")
+		return employees, errs.NewUnexpectedError("unexpected error")
+	}
+	return employees, nil
+
+}

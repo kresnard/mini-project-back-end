@@ -10,6 +10,7 @@ type EmployeeService interface {
 	GetAllEmployee() ([]domain.Employees, *errs.AppErr)
 	GetEmployeeID(int) (domain.Employees, *errs.AppErr)
 	CreateEmployee(input.EmployeeInput) (domain.Employees, *errs.AppErr)
+	DltEmployee(int) (domain.Employees, *errs.AppErr)
 }
 
 type DefaultEmployeeService struct {
@@ -47,6 +48,14 @@ func (e DefaultEmployeeService) CreateEmployee(input input.EmployeeInput) (domai
 	employee.Status = input.Status
 
 	employees, err := e.repo.CreateEmployeeInput(employee)
+	if err != nil {
+		return employees, err
+	}
+	return employees, nil
+}
+
+func (e DefaultEmployeeService) DltEmployee(id int) (domain.Employees, *errs.AppErr) {
+	employees, err := e.repo.DeleteEmployee(id)
 	if err != nil {
 		return employees, err
 	}

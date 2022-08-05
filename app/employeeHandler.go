@@ -51,3 +51,16 @@ func (ch *EmployeeHandlers) createEmployee(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, employees)
 }
+
+func (ch *EmployeeHandlers) deleteEmployee(c *gin.Context) {
+
+	id := c.Param("id")
+	newId, _ := strconv.Atoi(id)
+	employees, err := ch.service.DltEmployee(newId)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+	}
+
+	c.JSON(http.StatusOK, employees)
+}

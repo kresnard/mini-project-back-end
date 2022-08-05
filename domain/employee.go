@@ -17,4 +17,5 @@ type EmployeeRepository interface {
 	FindAll() ([]Employees, *errs.AppErr)
 	FindByID(int) (Employees, *errs.AppErr)
 	CreateEmployeeInput(Employees) (Employees, *errs.AppErr)
+	DeleteEmployee(int) (Employees, *errs.AppErr)
 }
