@@ -64,3 +64,16 @@ func (ch *EmployeeHandlers) deleteEmployee(c *gin.Context) {
 
 	c.JSON(http.StatusOK, employees)
 }
+
+func (ch *EmployeeHandlers) updateEmployee(c *gin.Context) {
+	id := c.Param("id")
+	newId, _ := strconv.Atoi(id)
+	var input input.EmployeeInput
+	err := c.ShouldBindJSON(&input)
+	employees, _ := ch.service.UpdtEmployee(newId, input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	c.JSON(http.StatusOK, employees)
+}

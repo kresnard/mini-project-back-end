@@ -60,3 +60,14 @@ func (e EmployeeRepositoryDB) DeleteEmployee(id int) (Employees, *errs.AppErr) {
 	return employees, nil
 
 }
+
+func (e EmployeeRepositoryDB) UpdateEmployee(id int, employees Employees) (Employees, *errs.AppErr) {
+
+	query := e.db.Model(&employees).Where("employee_id = ?", id).Updates(employees)
+
+	if query != nil {
+		logger.Error("error to update employee data")
+		return employees, errs.NewUnexpectedError("unexpected error")
+	}
+	return employees, nil
+}
