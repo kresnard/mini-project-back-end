@@ -47,20 +47,22 @@ func Start() {
 	// wiring
 	// * setup repository
 	employeeRepositoryDB := domain.NewEmployeeRepositoryDB(dbClient)
-
+	userRepositoryDB := domain.NewUserRepositoryDB(dbClient)
 	// * setup service
 	employeeService := service.NewEmployeeService(&employeeRepositoryDB)
-
+	userService := service.NewUserService(&userRepositoryDB)
 	// * setup handler
-	ch := EmployeeHandlers{employeeService}
+	che := EmployeeHandlers{employeeService}
+	chu := UserHandlers{userService}
 
 	router := gin.Default()
 
-	router.GET("/employees", ch.getAllEmployee)
-	router.GET("/employees/:id", ch.getEmployeeID)
-	router.POST("/employees", ch.createEmployee)
-	router.DELETE("/employees/:id", ch.deleteEmployee)
-	router.PUT("/employees/:id", ch.updateEmployee)
+	router.GET("/employees", che.getAllEmployee)
+	router.GET("/employees/:id", che.getEmployeeID)
+	router.POST("/employees", che.createEmployee)
+	router.DELETE("/employees/:id", che.deleteEmployee)
+	router.PUT("/employees/:id", che.updateEmployee)
+	router.POST("/users", chu.createUser)
 
 	router.Run(":9090")
 

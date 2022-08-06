@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"mpbe/errs"
 	"mpbe/logger"
 
@@ -30,8 +31,8 @@ func (e *EmployeeRepositoryDB) FindAll() ([]Employees, *errs.AppErr) {
 func (e EmployeeRepositoryDB) FindByID(id int) (Employees, *errs.AppErr) {
 
 	var employees Employees
-	query := e.db.First(&employees, "employee_id = ?", id)
-	if query != nil {
+	err := e.db.First(&employees, "employee_id = ?", id)
+	if err != nil {
 		logger.Error("error fetch data to employees table")
 		return employees, errs.NewUnexpectedError("unexpected error")
 	}
@@ -40,9 +41,10 @@ func (e EmployeeRepositoryDB) FindByID(id int) (Employees, *errs.AppErr) {
 
 func (e EmployeeRepositoryDB) CreateEmployeeInput(employees Employees) (Employees, *errs.AppErr) {
 
-	query := e.db.Create(&employees).Error
+	err := e.db.Create(&employees).Error
+	fmt.Println(err)
 
-	if query != nil {
+	if err != nil {
 		logger.Error("error to create employee data")
 		return employees, errs.NewUnexpectedError("unexpected error")
 	}
@@ -52,8 +54,8 @@ func (e EmployeeRepositoryDB) CreateEmployeeInput(employees Employees) (Employee
 func (e EmployeeRepositoryDB) DeleteEmployee(id int) (Employees, *errs.AppErr) {
 
 	var employees Employees
-	query := e.db.Delete(&employees, "employee_id = ?", id)
-	if query != nil {
+	err := e.db.Delete(&employees, "employee_id = ?", id)
+	if err != nil {
 		logger.Error("error to delete employee data")
 		return employees, errs.NewUnexpectedError("unexpected error")
 	}
@@ -63,9 +65,9 @@ func (e EmployeeRepositoryDB) DeleteEmployee(id int) (Employees, *errs.AppErr) {
 
 func (e EmployeeRepositoryDB) UpdateEmployee(id int, employees Employees) (Employees, *errs.AppErr) {
 
-	query := e.db.Model(&employees).Where("employee_id = ?", id).Updates(employees)
+	err := e.db.Model(&employees).Where("employee_id = ?", id).Updates(employees)
 
-	if query != nil {
+	if err != nil {
 		logger.Error("error to update employee data")
 		return employees, errs.NewUnexpectedError("unexpected error")
 	}
