@@ -1,10 +1,13 @@
 package service
 
 import (
+	"fmt"
 	"mpbe/domain"
 	"mpbe/errs"
 	"mpbe/input"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
@@ -23,22 +26,21 @@ func (u DefaultUserService) CreateUser(input input.UserInput) (domain.Users, *er
 	user := domain.Users{}
 	user.Username = input.Username
 	user.Email = input.Email
-	user.Password = input.Password
 	user.Role = input.Role
 	user.CreatedOn = time.Now()
+
+	hashPassword, errBc := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	if errBc != nil {
+		return user, errs.NewUnexpectedError("unexpected error")
+	}
+	fmt.Println(hashPassword)
+
+	user.Password = string(hashPassword)
+
 	users, err := u.repo.RegisterUserInput(user)
 	if err != nil {
 		return users, err
 	}
-
-	// hashPassword, err := bcrypt.GenerateFromPassword([]byte(User.Password), bcrypt.DefaultCost)
-	// if err != nil {
-	// 	c.JSON(http.StatusUnprocessableEntity, gin.H{
-	// 		"code": 500,
-	// 		"MSG":  "encryption error",
-	// 	})
-	// 	return
-	// }
 
 	return users, nil
 }
