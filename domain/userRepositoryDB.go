@@ -15,7 +15,7 @@ func NewUserRepositoryDB(client *gorm.DB) UserRepositoryDB {
 	return UserRepositoryDB{client}
 }
 
-func (u UserRepositoryDB) RegistrationUserInput(users Users) (Users, *errs.AppErr) {
+func (u UserRepositoryDB) RegisterUserInput(users Users) (Users, *errs.AppErr) {
 	err := u.db.Create(&users)
 
 	if err != nil {

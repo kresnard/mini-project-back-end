@@ -4,6 +4,7 @@ import (
 	"mpbe/domain"
 	"mpbe/errs"
 	"mpbe/input"
+	"time"
 )
 
 type UserService interface {
@@ -24,10 +25,20 @@ func (u DefaultUserService) CreateUser(input input.UserInput) (domain.Users, *er
 	user.Email = input.Email
 	user.Password = input.Password
 	user.Role = input.Role
-
-	users, err := u.repo.CreatUserInput(user)
+	user.CreatedOn = time.Now()
+	users, err := u.repo.RegisterUserInput(user)
 	if err != nil {
 		return users, err
 	}
+
+	// hashPassword, err := bcrypt.GenerateFromPassword([]byte(User.Password), bcrypt.DefaultCost)
+	// if err != nil {
+	// 	c.JSON(http.StatusUnprocessableEntity, gin.H{
+	// 		"code": 500,
+	// 		"MSG":  "encryption error",
+	// 	})
+	// 	return
+	// }
+
 	return users, nil
 }

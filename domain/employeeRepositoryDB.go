@@ -45,6 +45,7 @@ func (e EmployeeRepositoryDB) CreateEmployeeInput(employees Employees) (Employee
 	fmt.Println(err)
 
 	if err != nil {
+		// fmt.Println("err", err.Error())
 		logger.Error("error to create employee data")
 		return employees, errs.NewUnexpectedError("unexpected error")
 	}
