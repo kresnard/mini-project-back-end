@@ -16,4 +16,5 @@ type Users struct {
 
 type UserRepository interface {
 	RegisterUserInput(Users) (Users, *errs.AppErr)
+	LoginUserInput(string) (Users, *errs.AppErr)
 }

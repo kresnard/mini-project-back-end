@@ -22,3 +22,14 @@ func (ch *UserHandlers) createUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, users)
 }
+
+func (ch *UserHandlers) loginUser(c *gin.Context) {
+	var input input.Login
+	err := c.ShouldBindJSON(&input)
+	users, _ := ch.service.LoginUser(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}

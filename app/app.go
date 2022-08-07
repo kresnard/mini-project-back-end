@@ -63,6 +63,7 @@ func Start() {
 	router.DELETE("/employees/:id", che.deleteEmployee)
 	router.PUT("/employees/:id", che.updateEmployee)
 	router.POST("/users", chu.createUser)
+	router.GET("/login", chu.loginUser)
 
 	router.Run(":9090")
 

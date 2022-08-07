@@ -12,6 +12,7 @@ import (
 
 type UserService interface {
 	CreateUser(input.UserInput) (domain.Users, *errs.AppErr)
+	LoginUser(input.Login) (domain.Users, *errs.AppErr)
 }
 
 type DefaultUserService struct {
@@ -43,4 +44,25 @@ func (u DefaultUserService) CreateUser(input input.UserInput) (domain.Users, *er
 	}
 
 	return users, nil
+}
+
+func (u DefaultUserService) LoginUser(input input.Login) (domain.Users, *errs.AppErr) {
+	Email := input.Email
+	Password := input.Password
+
+	user, err := u.repo.LoginUserInput(Email)
+	if err != nil {
+		return user, err
+	}
+
+	if Email == "" {
+		return user, err
+	}
+
+	errByc := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(Password))
+	if errByc != nil {
+		return user, err
+	}
+
+	return user, nil
 }
