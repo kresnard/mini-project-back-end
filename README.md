@@ -1,2 +1,2 @@
 # mini-project-back-end
-Repo untuk mini project Back End Golang REST API
+Repository for my mini project about GO REST API with Gin, GORM & JWT.
