@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"mpbe/dto"
 	"mpbe/errs"
 	"mpbe/logger"
 
@@ -16,16 +17,27 @@ func NewEmployeeRepositoryDB(client *gorm.DB) EmployeeRepositoryDB {
 	return EmployeeRepositoryDB{client}
 }
 
-func (e *EmployeeRepositoryDB) FindAll() ([]Employees, *errs.AppErr) {
-	var err error
+func (e *EmployeeRepositoryDB) FindAll(pagination dto.Pagination) (dto.Pagination, *errs.AppErr) {
+	var p dto.Pagination
+	tr := 0
+	offset := pagination.Page * pagination.Limit
+
 	var employees []Employees
-	err = e.db.Find(&employees).Error
-	if err != nil {
-		logger.Error("error fetch data to employees table " + err.Error())
-		return nil, errs.NewUnexpectedError("unexpected error")
+	errFind := e.db.Limit(pagination.Limit).Offset(offset).Find(&employees).Error
+	if errFind != nil {
+		return p, nil
 	}
 
-	return employees, nil
+	pagination.Rows = employees
+	totalRows := int64(tr)
+
+	errCount := e.db.Model(employees).Count(&totalRows).Error
+
+	if errCount != nil {
+		return p, errs.NewUnexpectedError("unexpected error")
+	}
+
+	return pagination, nil
 }
 
 func (e EmployeeRepositoryDB) FindByID(id int) (Employees, *errs.AppErr) {

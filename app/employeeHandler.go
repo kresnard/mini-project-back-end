@@ -1,6 +1,7 @@
 package app
 
 import (
+	"mpbe/helper"
 	"mpbe/input"
 	"mpbe/service"
 	"net/http"
@@ -15,9 +16,9 @@ type EmployeeHandlers struct {
 
 func (ch *EmployeeHandlers) getAllEmployee(c *gin.Context) {
 
-	// status := r.URL.Query().Get("status")
+	pagination := helper.GeneratePaginationRequest(c)
 
-	employees, err := ch.service.GetAllEmployee()
+	employees, err := ch.service.GetAllEmployee(*pagination)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, nil)

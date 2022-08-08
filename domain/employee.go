@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"mpbe/dto"
 	"mpbe/errs"
 )
 
@@ -14,7 +15,7 @@ type Employees struct {
 }
 
 type EmployeeRepository interface {
-	FindAll() ([]Employees, *errs.AppErr)
+	FindAll(dto.Pagination) (dto.Pagination, *errs.AppErr)
 	FindByID(int) (Employees, *errs.AppErr)
 	CreateEmployeeInput(Employees) (Employees, *errs.AppErr)
 	DeleteEmployee(int) (Employees, *errs.AppErr)

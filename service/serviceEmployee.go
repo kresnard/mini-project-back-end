@@ -2,12 +2,13 @@ package service
 
 import (
 	"mpbe/domain"
+	"mpbe/dto"
 	"mpbe/errs"
 	"mpbe/input"
 )
 
 type EmployeeService interface {
-	GetAllEmployee() ([]domain.Employees, *errs.AppErr)
+	GetAllEmployee(dto.Pagination) (dto.Pagination, *errs.AppErr)
 	GetEmployeeID(int) (domain.Employees, *errs.AppErr)
 	CreateEmployee(input.EmployeeInput) (domain.Employees, *errs.AppErr)
 	DltEmployee(int) (domain.Employees, *errs.AppErr)
@@ -22,11 +23,11 @@ func NewEmployeeService(repository domain.EmployeeRepository) DefaultEmployeeSer
 	return DefaultEmployeeService{repository}
 }
 
-func (e DefaultEmployeeService) GetAllEmployee() ([]domain.Employees, *errs.AppErr) {
+func (e DefaultEmployeeService) GetAllEmployee(p dto.Pagination) (dto.Pagination, *errs.AppErr) {
 
-	employees, err := e.repo.FindAll()
+	employees, err := e.repo.FindAll(p)
 	if err != nil {
-		return nil, err
+		return employees, err
 	}
 
 	return employees, nil
