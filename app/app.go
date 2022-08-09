@@ -102,7 +102,7 @@ func authMiddleware(authService auth.AuthService, userService service.UserServic
 			return
 		}
 
-		tokenString := strings.Replace(authHeader, "Bearer", "", -1)
+		tokenString := strings.Replace(authHeader, "Bearer ", "", -1)
 		fmt.Println("TOken string", tokenString)
 
 		userId, ok, err := authService.ValidateToken(tokenString)
