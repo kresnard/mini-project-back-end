@@ -2,10 +2,15 @@ package app
 
 import (
 	"fmt"
+	"mpbe/auth"
 	"mpbe/domain"
+	"mpbe/errs"
 	"mpbe/logger"
 	"mpbe/service"
+	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -51,13 +56,14 @@ func Start() {
 	// * setup service
 	employeeService := service.NewEmployeeService(&employeeRepositoryDB)
 	userService := service.NewUserService(&userRepositoryDB)
+	authService := auth.NewAuthService()
 	// * setup handler
 	che := EmployeeHandlers{employeeService}
-	chu := UserHandlers{userService}
+	chu := UserHandlers{userService, authService}
 
 	router := gin.Default()
 
-	router.GET("/employees", che.getAllEmployee)
+	router.GET("/employees", authMiddleware(authService, userService), che.getAllEmployee)
 	router.GET("/employees/:id", che.getEmployeeID)
 	router.POST("/employees", che.createEmployee)
 	router.DELETE("/employees/:id", che.deleteEmployee)
@@ -84,4 +90,37 @@ func getClientDB() *gorm.DB {
 	logger.Info("success connect to database...")
 
 	return db
+}
+
+func authMiddleware(authService auth.AuthService, userService service.UserService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		authHeader := c.GetHeader("Authorization")
+		if !strings.Contains(authHeader, "Bearer") {
+			appErr := errs.NewBadRequestError("invalid token")
+			c.AbortWithStatusJSON(http.StatusUnauthorized, appErr)
+			return
+		}
+
+		tokenString := strings.Replace(authHeader, "Bearer", "", -1)
+		fmt.Println("TOken string", tokenString)
+
+		userId, ok, err := authService.ValidateToken(tokenString)
+		fmt.Println("userid", userId, "ok", ok, "Err", err)
+		if err != nil && userId == "" && !ok {
+			appErr := errs.NewBadRequestError("invalid token")
+			c.AbortWithStatusJSON(http.StatusUnauthorized, appErr)
+		} else {
+			idUser, _ := strconv.Atoi(userId)
+			fmt.Println("ID USER", idUser)
+			fmt.Println("ID USER KRESNA", userId)
+			user, err := userService.UserByID(idUser)
+			if err != nil {
+				appErr := errs.NewBadRequestError("invalid token")
+				c.AbortWithStatusJSON(http.StatusUnauthorized, appErr)
+			}
+			c.Set("currentUser", user)
+		}
+
+	}
 }

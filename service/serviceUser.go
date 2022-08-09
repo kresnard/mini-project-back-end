@@ -13,6 +13,7 @@ import (
 type UserService interface {
 	CreateUser(input.UserInput) (domain.Users, *errs.AppErr)
 	LoginUser(input.Login) (domain.Users, *errs.AppErr)
+	UserByID(int) (domain.Users, *errs.AppErr)
 }
 
 type DefaultUserService struct {
@@ -65,4 +66,12 @@ func (u DefaultUserService) LoginUser(input input.Login) (domain.Users, *errs.Ap
 	}
 
 	return user, nil
+}
+
+func (u DefaultUserService) UserByID(id int) (domain.Users, *errs.AppErr) {
+	users, err := u.repo.GetUserByID(id)
+	if err != nil {
+		return users, err
+	}
+	return users, nil
 }

@@ -43,7 +43,8 @@ func (e *EmployeeRepositoryDB) FindAll(pagination dto.Pagination) (dto.Paginatio
 func (e EmployeeRepositoryDB) FindByID(id int) (Employees, *errs.AppErr) {
 
 	var employees Employees
-	err := e.db.First(&employees, "employee_id = ?", id)
+	// err := e.db.First(&employees, "employee_id = ?", id).Error
+	err := e.db.Where("employee_id = ?", id).Find(&employees).Error
 	if err != nil {
 		logger.Error("error fetch data to employees table")
 		return employees, errs.NewUnexpectedError("unexpected error")

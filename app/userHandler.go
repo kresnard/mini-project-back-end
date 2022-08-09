@@ -1,6 +1,9 @@
 package app
 
 import (
+	"fmt"
+	"mpbe/auth"
+	"mpbe/domain"
 	"mpbe/input"
 	"mpbe/service"
 	"net/http"
@@ -8,8 +11,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type userDTO struct {
+	ID    int    `json:"user_id"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+	Token string `json:"token"`
+}
+
+func FormatuserDTO(user domain.Users, token string) userDTO {
+	userDTO := userDTO{}
+	userDTO.ID = user.ID
+	userDTO.Email = user.Email
+	userDTO.Role = user.Role
+	userDTO.Token = token
+	return userDTO
+}
+
 type UserHandlers struct {
-	service service.UserService
+	service     service.UserService
+	authService auth.AuthService
 }
 
 func (ch *UserHandlers) createUser(c *gin.Context) {
@@ -31,5 +51,13 @@ func (ch *UserHandlers) loginUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, nil)
 		return
 	}
-	c.JSON(http.StatusOK, users)
+
+	token, err := ch.authService.GenerateToken(users.ID)
+	if err != nil {
+		fmt.Println("TEST", token)
+		c.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	userDTO := FormatuserDTO(users, token)
+	c.JSON(http.StatusOK, userDTO)
 }

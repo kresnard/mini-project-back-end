@@ -5,10 +5,11 @@ import (
 	"mpbe/dto"
 	"mpbe/errs"
 	"mpbe/input"
+	setupdb "mpbe/setupDB"
 )
 
 type EmployeeService interface {
-	GetAllEmployee(dto.Pagination) (dto.Pagination, *errs.AppErr)
+	GetAllEmployee(dto.Pagination, int) (dto.Pagination, *errs.AppErr)
 	GetEmployeeID(int) (domain.Employees, *errs.AppErr)
 	CreateEmployee(input.EmployeeInput) (domain.Employees, *errs.AppErr)
 	DltEmployee(int) (domain.Employees, *errs.AppErr)
@@ -23,8 +24,14 @@ func NewEmployeeService(repository domain.EmployeeRepository) DefaultEmployeeSer
 	return DefaultEmployeeService{repository}
 }
 
-func (e DefaultEmployeeService) GetAllEmployee(p dto.Pagination) (dto.Pagination, *errs.AppErr) {
+func (e DefaultEmployeeService) GetAllEmployee(p dto.Pagination, id int) (dto.Pagination, *errs.AppErr) {
 
+	db := setupdb.GetClientDB()
+	userRepositoryDB := domain.NewUserRepositoryDB(db)
+	user, _ := userRepositoryDB.GetUserByID(id)
+	if user.Email == "" {
+		return p, errs.NewNotFoundError("user not found")
+	}
 	employees, err := e.repo.FindAll(p)
 	if err != nil {
 		return employees, err

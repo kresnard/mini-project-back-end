@@ -1,6 +1,7 @@
 package app
 
 import (
+	"mpbe/domain"
 	"mpbe/helper"
 	"mpbe/input"
 	"mpbe/service"
@@ -14,11 +15,18 @@ type EmployeeHandlers struct {
 	service service.EmployeeService
 }
 
+func getCurrentUserJWT(c *gin.Context) int {
+	currentUser := c.MustGet("currentUser").(domain.Users)
+	return currentUser.ID
+}
+
 func (ch *EmployeeHandlers) getAllEmployee(c *gin.Context) {
+
+	userID := getCurrentUserJWT(c)
 
 	pagination := helper.GeneratePaginationRequest(c)
 
-	employees, err := ch.service.GetAllEmployee(*pagination)
+	employees, err := ch.service.GetAllEmployee(*pagination, userID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, nil)
