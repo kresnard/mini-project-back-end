@@ -111,3 +111,213 @@ insert into "employees" values
 ```
 
 
+## REST API
+
+### Get All Employees
+```
+localhost:9090/employees
+```
+
+### Result Get All Employee
+```
+{
+    "limit": 10,
+    "page": 0,
+    "total_rows": 0,
+    "rows": [
+        {
+            "id": 1,
+            "name": "Adrian",
+            "gender": "Male",
+            "birthday": "1980-04-04T00:00:00Z",
+            "department": "IT",
+            "status": 0
+        },
+        {
+            "id": 2,
+            "name": "Bima",
+            "gender": "Male",
+            "birthday": "1987-05-06T00:00:00Z",
+            "department": "HR",
+            "status": 1
+        },
+        {
+            "id": 3,
+            "name": "Cantika",
+            "gender": "Female",
+            "birthday": "1989-03-04T00:00:00Z",
+            "department": "Marketing",
+            "status": 1
+        },
+        {
+            "id": 4,
+            "name": "Dadan",
+            "gender": "Male",
+            "birthday": "1990-11-01T00:00:00Z",
+            "department": "Product",
+            "status": 1
+        },
+        {
+            "id": 7,
+            "name": "sdalasdah",
+            "gender": "aale",
+            "birthday": "1920-01-02T00:00:00Z",
+            "department": "aksks",
+            "status": 1
+        },
+        {
+            "id": 8,
+            "name": "Mardun",
+            "gender": "Male",
+            "birthday": "1920-01-02T00:00:00Z",
+            "department": "Design",
+            "status": 0
+        }
+    ]
+}
+```
+
+### Get Employee by ID
+```
+localhost:9090/employees/1
+```
+
+### Result Get Employee by ID
+```
+{
+    "id": 1,
+    "name": "Adrian",
+    "gender": "Male",
+    "birthday": "1980-04-04T00:00:00Z",
+    "department": "IT",
+    "status": 0
+}
+```
+
+### Create Employee (POST)
+```
+localhost:9090/employees
+```
+
+### Create Employee Body
+```
+{
+    "name":"Mardun",
+    "gender":"Male",
+    "birthday":"1920-01-02",
+    "department":"Design",
+    "status":0
+}
+```
+
+### Create Employee Result
+```
+{
+    "id": 9,
+    "name": "Mardun",
+    "gender": "Male",
+    "birthday": "1920-01-02",
+    "department": "Design",
+    "status": 0
+}
+```
+
+### Delete Employee by ID
+```
+localhost:9090/employees/1
+```
+
+### Result Delete Employee by ID
+```
+{
+    "id": 0,
+    "name": "",
+    "gender": "",
+    "birthday": "",
+    "department": "",
+    "status": 0
+}
+```
+
+### Update Employee (POST)
+```
+localhost:9090/employees/7
+```
+
+### Update Employee Body
+```
+{
+    "name":"Madan",
+    "gender":"Male",
+    "birthday":"1920-01-02",
+    "department":"HR",
+    "status":0
+}
+```
+
+### Update Employee Result
+```
+{
+    "id": 0,
+    "name": "Madan",
+    "gender": "Male",
+    "birthday": "1920-01-02",
+    "department": "HR",
+    "status": 0
+}
+```
+
+### Registrasi User (POST)
+```
+localhost:9090/users
+```
+
+### Registrasi User Body
+```
+{
+    "username":"kresna123",
+    "password":"sandikresna123",
+    "email":"kresna123@gmail.com",
+    "role": "user"
+}
+```
+
+### Registrasi User Result
+```
+{
+    "user_id": 19,
+    "username": "kresna123",
+    "email": "kresna123@gmail.com",
+    "password": "$2a$04$O//3McJFT7lGnwEvjxMRSeO8Fqff.C4bbWUs8/NjxDcruFV4L9aUC",
+    "role": "user",
+    "created_on": "2022-08-09T22:05:06.2359575+07:00"
+}
+```
+
+### Login User (POST)
+```
+localhost:9090/login
+```
+
+### Login User Body
+```
+{
+    "email":"kresna123@gmail.com",
+    "password":"sandikresna123"
+}
+```
+
+### Login User Result
+```
+{
+    "user_id": 18,
+    "email": "kresna123@gmail.com",
+    "role": "user",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTgiLCJleHAiOjE2NjAxNDM1NzZ9.5Oye8WcAOo20LK5VkR9n_7f6KX6y-UY-7JfnY45jQbs"
+}
+```
+
+
+
+
+
